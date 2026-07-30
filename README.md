@@ -27,8 +27,8 @@ Build your personal portfolio visually — add, remove, and rearrange sections (
 
 | Layer | Technology |
 |-------|------------|
-| Backend | Laravel 11 |
-| Admin Panel | Filament 3 |
+| Backend | Laravel 13 |
+| Admin Panel | Filament 5 |
 | Frontend | Quasar (Vue 3) |
 | Database | MySQL 8+ |
 | API | Laravel REST API |

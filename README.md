@@ -1,4 +1,4 @@
-markdown
+
 # 🚀 Dynamic Portfolio CMS
 
 A fully dynamic, single‑page portfolio builder with a powerful admin panel.  

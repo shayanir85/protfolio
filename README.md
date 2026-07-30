@@ -161,6 +161,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 👤 Author
 
-**shayanIranpour** – [Your Website](https://shayaniranpor.ir) – [@yourhandle](https://twitter.com/yourhandle)
+**shayanIranpour** – [https://shayaniranpor.ir](https://shayaniranpor.ir) 
 
 ---

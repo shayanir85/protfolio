@@ -1,1 +1,7 @@
-/* app global css */
+html, body {
+  scroll-behavior: smooth;
+}
+
+a {
+  text-decoration: none;
+}

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\User;
 use App\Models\GithubRepo; // Ensure this model exists
-
+use Filament\Notifications\Notification;
 class GithubReposTable
 {
     public static function configure(Table $table): Table
@@ -22,9 +22,23 @@ class GithubReposTable
         return $table
             ->columns([
                 // 1. CHECKBOX: Matches 'show' column in your model
-                ToggleColumn::make('show')
-                    ->label('Show on Portfolio')
-                    ->tooltip('Toggle to show or hide this repository'),
+            ToggleColumn::make('show')
+                ->label('Show on Portfolio')
+                ->tooltip('Toggle to show or hide this repository')
+                ->afterStateUpdated(function ($record, $state) {
+                    // $state is the new boolean value (true/false)
+                    // $record is the GithubRepo model instance
+                    
+                    // Example: Show a notification
+                    Notification::make()
+                        ->title($state ? 'Repository visible' : 'Repository hidden')
+                        ->body("{$record->full_name} has been " . ($state ? 'shown on' : 'hidden from') . " your portfolio.")
+                        ->success()
+                        ->send();
+                        
+                    // Example: Clear portfolio cache so changes appear immediately
+                    // Cache::forget('portfolio_repos');
+                }),
 
                 // 2. REPOSITORY NAME: Matches 'full_name'
                 TextColumn::make('full_name')

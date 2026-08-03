@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\GithubRepos;
+use App\Models\GithubRepo;
 use Illuminate\Http\Request;
 
 class GithubReposController extends Controller
@@ -12,8 +12,10 @@ class GithubReposController extends Controller
      */
     public function index()
     {
-        //
+        $repos = GithubRepo::where('show', true)->paginate(50);
+        return response()->json($repos);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,7 +36,7 @@ class GithubReposController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(GithubRepos $githubRepos)
+    public function show(GithubRepo $githubRepos)
     {
         //
     }
@@ -42,7 +44,7 @@ class GithubReposController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(GithubRepos $githubRepos)
+    public function edit(GithubRepo $githubRepos)
     {
         //
     }
@@ -50,7 +52,7 @@ class GithubReposController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, GithubRepos $githubRepos)
+    public function update(Request $request, GithubRepo $githubRepos)
     {
         //
     }
@@ -58,7 +60,7 @@ class GithubReposController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GithubRepos $githubRepos)
+    public function destroy(GithubRepo $githubRepos)
     {
         //
     }

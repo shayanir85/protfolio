@@ -392,20 +392,6 @@
           <div class="section-divider"></div>
         </div>
 
-        <!-- Filter Bar -->
-        <div class="filter-bar" v-if="!loadingProjects && !projectsError && projects.length > 0">
-          <q-btn
-            v-for="filter in projectFilters"
-            :key="filter.value"
-            :color="activeFilter === filter.value ? 'primary' : 'grey-7'"
-            :outline="activeFilter !== filter.value"
-            :label="filter.label"
-            no-caps
-            rounded
-            dense
-            @click="activeFilter = filter.value"
-          />
-        </div>
 
         <!-- Loading Skeleton with shimmer -->
         <div v-if="loadingProjects" class="projects-grid">
@@ -549,7 +535,7 @@
                 </div>
                 <div>
                   <div class="contact-method-label">Email</div>
-                  <div class="contact-method-value">shayaniranpor8@gmail.com</div>
+                  <div class="contact-method-value">shayaniranpor84@gmail.com</div>
                 </div>
               </a>
 
@@ -591,7 +577,7 @@
                 </div>
                 <div>
                   <div class="contact-method-label">Instagram</div>
-                  <div class="contact-method-value">@shayan_iranpor</div>
+                  <div class="contact-method-value">@shayaniranpour</div>
                 </div>
               </a>
             </div>
@@ -689,7 +675,7 @@
               round
               flat
               icon="fab fa-instagram"
-              href="https://www.instagram.com/shayan_iranpor"
+              href="https://www.instagram.com/shayaniranpour"
               target="_blank"
             />
             <q-btn
@@ -741,7 +727,7 @@ const isDark = ref(false)
 const typewriterTexts = [
   'Backend Developer',
   'Laravel Enthusiast',
-  'PHP Engineer',
+  'computer Engineer',
   'Problem Solver',
   'Code Craftsman',
 ]
@@ -835,12 +821,6 @@ const skills = [
   { name: 'Git', level: 75 },
 ]
 
-const projectFilters = [
-  { label: 'All', value: 'all' },
-  { label: 'PHP', value: 'PHP' },
-  { label: 'Laravel', value: 'Laravel' },
-  { label: 'Vue.js', value: 'Vue' },
-]
 
 const contactForm = reactive({
   name: '',

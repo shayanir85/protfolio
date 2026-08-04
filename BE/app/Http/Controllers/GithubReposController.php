@@ -16,6 +16,12 @@ class GithubReposController extends Controller
         return response()->json($repos);
     }
 
+    public function count_proj()
+    {
+        $proj_count = GithubRepo::count();
+        return response()->json($proj_count);
+    }
+
 
     /**
      * Show the form for creating a new resource.

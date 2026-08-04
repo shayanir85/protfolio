@@ -89,8 +89,62 @@ class GithubReposTable
             ])
             ->defaultSort('pushed_at', 'desc')
             ->headerActions([
+                                Action::make('FetchAgain')
+                ->label('Fetch')
+                ->icon('heroicon-o-arrow-path')
+                ->action(function(){
+                    $userId = auth()->id();
+                    $user = User::findOrFail($userId);
+                    $username= $user->github_username;
+                    if($username){
+                        $response = Http::get("https://api.github.com/users/$username/repos?sort=updated&direction=desc&per_page=100");
+
+                        if ($response->successful()) {
+                            $repos = $response->json();
+
+                            // 3. Cache the response
+                            Cache::put("github_api_data_$username", $repos, now()->addMinutes(30));
+
+                            // 4. Save to Database
+                            // We clear existing repos for this user to avoid duplicates, then insert the fresh list
+                            GithubRepo::where('user_id', $userId)->delete();
+
+                            $insertData = collect($repos)->map(fn ($repo) => [
+                                'user_id' => $userId,
+                                'full_name' => $repo['full_name'],
+                                'html_url' => $repo['html_url'],
+                                'description' => $repo['description'],
+                                'ssh_url' => $repo['ssh_url'],
+                                'stargazers_count' => $repo['stargazers_count'],
+                                'watchers_count' => $repo['watchers_count'],
+                                'forks_count' => $repo['forks_count'],
+                                'pushed_at' => $repo['pushed_at'],
+                                'show' => false, 
+                                'created_at' => now(),
+                                'updated_at' => now(),
+                            ])->toArray();
+
+                            if (!empty($insertData)) {
+                                GithubRepo::insert($insertData);
+                            }
+                        } else {
+                            throw new \Exception('Failed to fetch GitHub repositories. Please check the username and try again.');
+                        }
+                        return    Notification::make()
+                                    ->title('fetched successfully')
+                                    ->body("your repos are updated")
+                                    ->success()
+                                    ->send(); 
+                    }
+                Notification::make()
+                    ->title('Sign Your Username First')
+                    ->body("You can sign your username using the 'Fetch Your GitHub Repos' button.")
+                    ->danger()
+                    ->icon('heroicon-o-arrow-path')
+                    ->send();
+                }),
                 Action::make('fetchAndSyncGithubRepos')
-                    ->label('Fetch GitHub Repos')
+                    ->label('Fetch Your GitHub Repos')
                     ->icon('heroicon-o-cloud-arrow-down')
                     ->modalHeading('Enter GitHub Username')
                     ->modalDescription('This will fetch public repositories, cache them, and save them to your database.')
@@ -153,7 +207,7 @@ class GithubReposTable
                 // \Filament\Tables\Filters\TernaryFilter::make('is_visible')->label('Visibility'),
             ])
             ->recordActions([
-                EditAction::make(),
+
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

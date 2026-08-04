@@ -12,18 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('github_repos', function (Blueprint $table) {
-            $table->id();
-            $table->string('user_id');
-            $table->string('full_name');
-            $table->string('html_url');
-            $table->longText('description')->nullable();
-            $table->string('ssh_url');
-            $table->integer('stargazers_count');
-            $table->integer('watchers_count');
-            $table->integer('forks_count');
-            $table->string('pushed_at');
-            $table->boolean('show');
-            $table->timestamps();
+                $table->id();
+                $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // bigint, FK to users
+                $table->string('full_name');
+                $table->string('html_url');
+                $table->longText('description')->nullable();
+                $table->string('ssh_url');
+                $table->integer('stargazers_count');
+                $table->integer('watchers_count');
+                $table->integer('forks_count');
+                $table->string('pushed_at');
+                $table->boolean('show');
+                $table->timestamps();
             });
     }
 

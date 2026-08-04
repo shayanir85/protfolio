@@ -656,33 +656,15 @@
             </p>
           </div>
 
-          <div class="footer-socials">
+          <div class="footer-socials" v-if="socialLinks.length > 0">
             <q-btn
+              v-for="(link, index) in socialLinks"
+              :key="index"
               round
               flat
-              icon="fab fa-github"
-              href="https://github.com/shayanir85"
+              :icon="getSocialIcon(link.platform)"
+              :href="link.url"
               target="_blank"
-            />
-            <q-btn
-              round
-              flat
-              icon="fab fa-linkedin"
-              href="https://www.linkedin.com/in/shayan-iranpor-090642332"
-              target="_blank"
-            />
-            <q-btn
-              round
-              flat
-              icon="fab fa-instagram"
-              href="https://www.instagram.com/shayaniranpour"
-              target="_blank"
-            />
-            <q-btn
-              round
-              flat
-              icon="email"
-              href="mailto:shayaniranpor8@gmail.com"
             />
           </div>
         </div>
@@ -711,6 +693,9 @@ const API_BASE = 'http://127.0.0.1:8000/api'
 const projects = ref([])
 const loadingProjects = ref(true)
 const projectsError = ref(null)
+
+const socialLinks = ref([])
+const loadingSocials = ref(false)
 
 const activeSection = ref('hero')
 const scrollProgress = ref(0)
@@ -957,6 +942,23 @@ function getSkillIcon(tech) {
   return icons[tech] || 'memory'
 }
 
+function getSocialIcon(platform) {
+  const icons = {
+    github: 'fab fa-github',
+    linkedin: 'fab fa-linkedin',
+    instagram: 'fab fa-instagram',
+    twitter: 'fab fa-twitter',
+    facebook: 'fab fa-facebook',
+    youtube: 'fab fa-youtube',
+    telegram: 'fab fa-telegram',
+    whatsapp: 'fab fa-whatsapp',
+    email: 'email',
+    website: 'language',
+  }
+  const platformLower = (platform || '').toLowerCase()
+  return icons[platformLower] || 'link'
+}
+
 function getSkillLevel(tech) {
   const levels = {
     PHP: 85,
@@ -1051,6 +1053,39 @@ async function fetchProjects() {
   }
 }
 
+async function fetchSocials() {
+  loadingSocials.value = true
+  const locale = $q.lang.isoName || 'en'
+  const cacheKey = `social_links_${locale}`
+  const cached = localStorage.getItem(cacheKey)
+  const cachedData = cached ? JSON.parse(cached) : null
+  const now = Date.now()
+  
+  if (cachedData && (now - cachedData.timestamp) < 30 * 60 * 1000) {
+    socialLinks.value = cachedData.data || []
+    loadingSocials.value = false
+    return
+  }
+  
+  try {
+    const res = await fetch(`${API_BASE}/user/socials`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const json = await res.json()
+    const data = json.data ?? json ?? []
+    socialLinks.value = Array.isArray(data) ? data : []
+    
+    localStorage.setItem(cacheKey, JSON.stringify({
+      data: socialLinks.value,
+      timestamp: now
+    }))
+  } catch (err) {
+    socialLinks.value = []
+    console.error('Failed to fetch social links:', err)
+  } finally {
+    loadingSocials.value = false
+  }
+}
+
 // ============ LIFECYCLE ============
 onMounted(() => {
   // Dark mode init
@@ -1071,6 +1106,7 @@ onMounted(() => {
   setupStatsObserver()
   startTypewriter()
   fetchProjects()
+  fetchSocials()
 })
 
 onUnmounted(() => {

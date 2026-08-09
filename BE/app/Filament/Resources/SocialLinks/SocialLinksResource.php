@@ -32,7 +32,6 @@ class SocialLinksResource extends Resource
                 TextInput::make('social_link') // Fixed: snake_case to match DB column
                     ->label('Social Link')
                     ->required()
-                    ->prefix('https://')
                     ->maxLength(255),
                 Select::make('social_media_name') // Fixed: snake_case to match DB column
                     ->options(SocialMediaName::class)

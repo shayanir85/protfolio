@@ -2,7 +2,6 @@
   <q-page class="portfolio-page">
     <!-- Scroll Progress Bar -->
     <div class="scroll-progress-bar" :style="{ width: scrollProgress + '%' }"></div>
-
     <!-- Floating Navbar -->
     <q-toolbar class="navbar" :class="{ scrolled: isScrolled }">
       <div class="navbar-container">
@@ -529,57 +528,35 @@
             </p>
 
             <div class="contact-methods">
-              <a href="mailto:shayaniranpor8@gmail.com" class="contact-method glass-card">
+              <a :href="`mailto:${userEmail}`" class="contact-method glass-card">
                 <div class="contact-method-icon email">
                   <q-icon name="email" size="24px" />
                 </div>
                 <div>
                   <div class="contact-method-label">Email</div>
-                  <div class="contact-method-value">shayaniranpor84@gmail.com</div>
+                  <div class="contact-method-value">{{ userEmail }}</div>
                 </div>
               </a>
 
-              <a
-                href="https://github.com/shayanir85"
-                target="_blank"
-                class="contact-method glass-card"
-              >
-                <div class="contact-method-icon github">
-                  <q-icon name="fab fa-github" size="24px" />
-                </div>
-                <div>
-                  <div class="contact-method-label">GitHub</div>
-                  <div class="contact-method-value">shayanir85</div>
-                </div>
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/shayan-iranpor-090642332"
-                target="_blank"
-                class="contact-method glass-card"
-              >
-                <div class="contact-method-icon linkedin">
-                  <q-icon name="fab fa-linkedin" size="24px" />
-                </div>
-                <div>
-                  <div class="contact-method-label">LinkedIn</div>
-                  <div class="contact-method-value">Shayan Iranpour</div>
-                </div>
-              </a>
-
-              <a
-                href="https://www.instagram.com/shayan_iranpor"
-                target="_blank"
-                class="contact-method glass-card"
-              >
-                <div class="contact-method-icon instagram">
-                  <q-icon name="fab fa-instagram" size="24px" />
-                </div>
-                <div>
-                  <div class="contact-method-label">Instagram</div>
-                  <div class="contact-method-value">@shayaniranpour</div>
-                </div>
-              </a>
+              <template v-if="socialLinks.length > 0">
+                <a
+                  v-for="(link, index) in socialLinks"
+                  :key="index"
+                  :href="link.social_link"
+                  target="_blank"
+                  class="contact-method glass-card"
+                >
+                  <div :class="`contact-method-icon ${link.social_media_name}`">
+                    <q-icon :name="getSocialIcon(link.social_media_name)" size="24px" />
+                  </div>
+                  <div>
+                    <div class="contact-method-label">{{ link.social_media_name }}</div>
+                    <div class="contact-method-value">
+                      {{ link.social_link.replace('https://', '').replace('www.', '') }}
+                    </div>
+                  </div>
+                </a>
+              </template>
             </div>
           </div>
 
@@ -662,8 +639,8 @@
               :key="index"
               round
               flat
-              :icon="getSocialIcon(link.platform)"
-              :href="link.url"
+              :icon="getSocialIcon(link.social_media_name)"
+              :href="link.social_link"
               target="_blank"
             />
           </div>
@@ -696,6 +673,8 @@ const projectsError = ref(null)
 
 const socialLinks = ref([])
 const loadingSocials = ref(false)
+
+const userEmail = ref('shayaniranpor84@gmail.com')
 
 const activeSection = ref('hero')
 const scrollProgress = ref(0)
@@ -732,8 +711,7 @@ const navLinks = [
 // Stats with animated counters
 const stats = reactive([
   { value: 2, label: 'Years Learning', suffix: '+', animated: 0 },
-  { value: 10, label: 'Projects Built', suffix: '+', animated: 0 },
-  { value: 5000, label: 'Lines of Code', suffix: '+', animated: 0 },
+  { value: 0, label: 'Projects Built', suffix: '+', animated: 0 },
   { value: 3, label: 'Languages', suffix: '', animated: 0 },
 ])
 
@@ -1044,8 +1022,10 @@ async function fetchProjects() {
     const res = await fetch(`${API_BASE}/proj`)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const json = await res.json()
+  
     projects.value = json.data ?? json
-  } catch (err) {
+
+    } catch (err) {
     projectsError.value = 'Failed to load projects. Make sure the backend is running.'
     console.error('Failed to fetch projects:', err)
   } finally {
@@ -1053,36 +1033,76 @@ async function fetchProjects() {
   }
 }
 
+async function fetchProjectsCount() {
+  loadingProjects.value = true
+  projectsError.value = null
+  try {
+    const res = await fetch(`${API_BASE}/proj/count`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const json = await res.json()
+    const count = json.count ?? json.data ?? json
+    stats[1].value = typeof count === 'number' ? count : 0
+    animateCounters()
+    return stats[1].value
+  } catch (err) {
+    projectsError.value = 'Failed to load project count. Make sure the backend is running.'
+    console.error('Failed to fetch project count:', err)
+    
+    $q.notify({
+      type: 'negative',
+      message: 'Could not load project count. Please try again later.',
+      position: 'top',
+    })
+  } finally {
+    loadingProjects.value = false
+  }
+}
+
 async function fetchSocials() {
   loadingSocials.value = true
-  const locale = $q.lang.isoName || 'en'
-  const cacheKey = `social_links_${locale}`
-  const cached = localStorage.getItem(cacheKey)
-  const cachedData = cached ? JSON.parse(cached) : null
-  const now = Date.now()
-  
-  if (cachedData && (now - cachedData.timestamp) < 30 * 60 * 1000) {
-    socialLinks.value = cachedData.data || []
-    loadingSocials.value = false
-    return
-  }
   
   try {
     const res = await fetch(`${API_BASE}/user/socials`)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
-    const json = await res.json()
-    const data = json.data ?? json ?? []
-    socialLinks.value = Array.isArray(data) ? data : []
     
-    localStorage.setItem(cacheKey, JSON.stringify({
+    const data = await res.json()
+    
+    
+    if (Array.isArray(data)) {
+      socialLinks.value = data
+    } 
+    else if (data.data && Array.isArray(data.data)) {
+      socialLinks.value = data.data
+    }
+    else if (typeof data === 'object' && data !== null) {
+      const arrayData = Object.values(data)
+      if (arrayData.every(item => typeof item === 'object')) {
+        socialLinks.value = arrayData
+      }
+    }
+    
+    localStorage.setItem('social_links', JSON.stringify({
       data: socialLinks.value,
-      timestamp: now
+      timestamp: Date.now()
     }))
+    
   } catch (err) {
-    socialLinks.value = []
     console.error('Failed to fetch social links:', err)
   } finally {
     loadingSocials.value = false
+  }
+}
+
+async function fetchEmail() {
+  try {
+    const res = await fetch(`${API_BASE}/user/email`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
+    const json = await res.json()
+    if (json.email) {
+      userEmail.value = json.email
+    }
+  } catch (err) {
+    console.error('Failed to fetch user email:', err)
   }
 }
 
@@ -1106,7 +1126,9 @@ onMounted(() => {
   setupStatsObserver()
   startTypewriter()
   fetchProjects()
+  fetchProjectsCount()
   fetchSocials()
+  fetchEmail()
 })
 
 onUnmounted(() => {
@@ -1311,7 +1333,7 @@ watch(isDark, (val) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 100px 24px 60px;
+  padding: 100px 24px 160px;
   overflow: hidden;
 }
 
@@ -1701,7 +1723,6 @@ watch(isDark, (val) => {
   border-radius: 50%;
   padding: 8px;
   background: var(--primary-gradient);
-  animation: rotate 20s linear infinite;
 }
 
 .avatar-inner {

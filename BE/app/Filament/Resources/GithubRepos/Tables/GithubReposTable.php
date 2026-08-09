@@ -97,7 +97,7 @@ class GithubReposTable
                     $user = User::findOrFail($userId);
                     $username= $user->github_username;
                     if($username){
-                        $response = Http::get("https://api.github.com/users/$username/repos?sort=updated&direction=desc&per_page=100");
+                        $response = Http::get("https://api.github.com/users/$username/repos");
 
                         if ($response->successful()) {
                             $repos = $response->json();
@@ -106,7 +106,7 @@ class GithubReposTable
                             Cache::put("github_api_data_$username", $repos, now()->addMinutes(30));
 
                             // 4. Save to Database
-                            // We clear existing repos for this user to avoid duplicates, then insert the fresh list
+                            // We clear existing repos for thais user to avoid duplicates, then insert the fresh list
                             GithubRepo::where('user_id', $userId)->delete();
 
                             $insertData = collect($repos)->map(fn ($repo) => [
@@ -167,7 +167,7 @@ class GithubReposTable
                         $user->save();
 
                         // 2. Fetch data from GitHub API
-                        $response = Http::get("https://api.github.com/users/$username/repos?sort=updated&direction=desc&per_page=100");
+                        $response = Http::withoutVerifying()->get("https://api.github.com/users/$username/repos?sort=updated&direction=desc&per_page=100");
 
                         if ($response->successful()) {
                             $repos = $response->json();

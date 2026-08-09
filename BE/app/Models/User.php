@@ -35,7 +35,7 @@ class User extends Authenticatable
     
     public function user(): HasOne
     {
-        return $this->HasOne(GithubRepo::class); // <-- Correct relation syntax
+        return $this->hasOne(GithubRepo::class); // <-- Correct relation syntax
     }
     public function social(): HasMany
     {

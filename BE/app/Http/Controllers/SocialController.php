@@ -10,18 +10,6 @@ class SocialController extends Controller
 {
     public function index()
     {
-        $locale = app()->getLocale();
-        $cacheKey = "social_links_{$locale}";
-
-        $links = Cache::remember($cacheKey, now()->addMinutes(30), function () {
-            return SocialLinks::all();
-        });
-
-        if ($links->isEmpty()) {
-            return response()->json([]);
-        }
-
-        return response()->json($links);
+    return SocialLinks::all();
     }
-
 }

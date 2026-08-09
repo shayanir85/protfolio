@@ -577,15 +577,15 @@
                     </template>
                   </q-input>
                   <q-input
-                    v-model="contactForm.email"
-                    label="Your Email"
-                    type="email"
+                    v-model="contactForm.phone"
+                    label="Your Phone Number"
+                    type="Number"
                     outlined
                     dense
-                    :rules="[v => !!v || 'Email is required']"
+                    :rules="[v => !!v || 'Phone Number is required']"
                   >
                     <template #prepend>
-                      <q-icon name="email" color="grey-7" />
+                      <q-icon name="call" color="grey-7" />
                     </template>
                   </q-input>
                   <q-input
@@ -662,9 +662,19 @@
 <script setup>
 import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useQuasar } from 'quasar'
+import axios from 'axios'
+
 
 const $q = useQuasar()
 const API_BASE = 'http://127.0.0.1:8000/api'
+const api = axios.create({
+  baseURL: API_BASE,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
+})
 
 // ============ STATE ============
 const projects = ref([])
@@ -674,7 +684,7 @@ const projectsError = ref(null)
 const socialLinks = ref([])
 const loadingSocials = ref(false)
 
-const userEmail = ref('shayaniranpor84@gmail.com')
+const userEmail = ref('')
 
 const activeSection = ref('hero')
 const scrollProgress = ref(0)
@@ -721,7 +731,7 @@ const languages = ['Persian', 'Turkish', 'English']
 const experiences = [
   {
     title: 'Backend Developer',
-    period: '2023 - Present',
+    period: '2025 - Present',
     company: 'Self-employed / Freelance',
     icon: 'code',
     duties: [
@@ -732,7 +742,7 @@ const experiences = [
   },
   {
     title: 'Engineering Student',
-    period: '2022 - Present',
+    period: '2024 - Present',
     company: 'Engineering University',
     icon: 'school',
     duties: [
@@ -787,7 +797,7 @@ const skills = [
 
 const contactForm = reactive({
   name: '',
-  email: '',
+  phone: '',
   message: '',
 })
 
@@ -1003,16 +1013,65 @@ function setupStatsObserver() {
   })
 }
 
-function onContactSubmit() {
-  $q.notify({
-    type: 'positive',
-    message: 'Thanks for reaching out! I will get back to you soon.',
-    icon: 'check_circle',
-    position: 'top',
-  })
-  contactForm.name = ''
-  contactForm.email = ''
-  contactForm.message = ''
+async function onContactSubmit() {
+ 
+
+  try {
+    const response = await api.post('/contact', {
+      name: contactForm.name,
+      phone: contactForm.phone,
+      message: contactForm.message
+    })
+
+    // Success notification
+    $q.notify({
+      type: 'positive',
+      message: response.data.message || 'Thanks for reaching out! I will get back to you soon.',
+      icon: 'check_circle',
+      position: 'top',
+      timeout: 5000,
+    })
+
+    // Reset form
+    contactForm.name.val = ''
+    contactForm.email.val = ''
+    contactForm.message.val = ''
+
+  } catch (error) {
+    console.error('Contact form error:', error)
+    
+    // Handle different error scenarios
+    let errorMessage = 'Failed to send message. Please try again later.'
+    
+    if (error.response) {
+      // Server responded with error
+      if (error.response.status === 422) {
+        // Validation errors
+        const errors = error.response.data.errors
+        if (errors) {
+          errorMessage = Object.values(errors).flat().join(' ')
+        }
+      } else if (error.response.status === 429) {
+        errorMessage = 'Too many messages. Please wait a moment before trying again.'
+      } else {
+        errorMessage = error.response.data.message || errorMessage
+      }
+    } else if (error.request) {
+      // Network error
+      errorMessage = 'Network error. Please check your internet connection.'
+    }
+
+    $q.notify({
+      type: 'negative',
+      message: errorMessage,
+      icon: 'error',
+      position: 'top',
+      timeout: 5000,
+    })
+    
+  } finally {
+    $q.loading.hide()
+  }
 }
 
 async function fetchProjects() {

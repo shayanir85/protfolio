@@ -1,15 +1,12 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header elevated class="bg-dark">
-     
-    </q-header>
+    <q-header elevated class="bg-dark"> </q-header>
 
     <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
 </template>
-  
 
 <style scoped>
 .brand {
@@ -32,7 +29,9 @@
   font-size: 0.95rem;
   padding: 8px 14px;
   border-radius: 8px;
-  transition: color 0.2s, background-color 0.2s;
+  transition:
+    color 0.2s,
+    background-color 0.2s;
 }
 
 .nav-link:hover {

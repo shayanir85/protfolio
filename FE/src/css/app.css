@@ -1,6 +1,107 @@
-html, body {
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+@font-face {
+  font-family: 'Estedad';
+  src: url('../fonts/Estedad-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBMPlexSansArabic';
+  src: url('../fonts/IBMPlexSansArabic-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+html,
+body {
   scroll-behavior: smooth;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23667eea'/%3E%3C/svg%3E") 8 8, auto;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23667eea'/%3E%3C/svg%3E")
+      8 8,
+    auto;
+}
+
+/* Base Persian font for paragraphs and other elements */
+body.lang-fa {
+  font-family: 'IBMPlexSansArabic', 'Vazirmatn', Tahoma, Arial, sans-serif !important;
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: isolate;
+}
+
+body.lang-fa p,
+body.lang-fa span,
+body.lang-fa div,
+body.lang-fa li,
+body.lang-fa a,
+body.lang-fa button,
+body.lang-fa input,
+body.lang-fa textarea {
+  font-family: 'IBMPlexSansArabic', 'Vazirmatn', Tahoma, Arial, sans-serif;
+  unicode-bidi: isolate;
+}
+
+/* Persian titles, headers, hero section, and navbar use Estedad-Bold */
+body.lang-fa h1,
+body.lang-fa h2,
+body.lang-fa h3,
+body.lang-fa h4,
+body.lang-fa h5,
+body.lang-fa h6,
+body.lang-fa .section-title,
+body.lang-fa .navbar,
+body.lang-fa .navbar *:not(.q-icon):not(i),
+body.lang-fa .hero-section,
+body.lang-fa .hero-section h1,
+body.lang-fa .hero-section h2,
+body.lang-fa .hero-section h3,
+body.lang-fa .hero-title,
+body.lang-fa .hero-chip,
+body.lang-fa .hero-role,
+body.lang-fa .nav-links,
+body.lang-fa .nav-link,
+body.lang-fa .desktop-nav,
+body.lang-fa .mobile-nav-item,
+body.lang-fa .brand {
+  font-family: 'Estedad', 'Vazirmatn', Tahoma, Arial, sans-serif !important;
+}
+
+body.lang-fa h1 *:not(.q-icon),
+body.lang-fa h2 *:not(.q-icon),
+body.lang-fa h3 *:not(.q-icon),
+body.lang-fa h4 *:not(.q-icon),
+body.lang-fa h5 *:not(.q-icon),
+body.lang-fa h6 *:not(.q-icon),
+body.lang-fa .section-title *:not(.q-icon) {
+  font-family: 'Estedad', 'Vazirmatn', Tahoma, Arial, sans-serif !important;
+}
+
+/* Ensure Quasar icons retain their icon font */
+.q-icon,
+i.q-icon {
+  font-family: 'Material Icons' !important;
+}
+
+.en-inline,
+bdi {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline;
+  font-weight: 700;
+}
+
+body.lang-en {
+  font-family:
+    'Inter',
+    system-ui,
+    -apple-system,
+    sans-serif !important;
+  direction: ltr;
+  text-align: left;
 }
 
 a {
@@ -8,23 +109,38 @@ a {
 }
 
 /* Custom Cursor hover state for interactive elements */
-a, button, .q-btn, [role="button"], select, input, textarea {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%23667eea' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23667eea'/%3E%3C/svg%3E") 12 12, pointer;
+a,
+button,
+.q-btn,
+[role='button'],
+select,
+input,
+textarea {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%23667eea' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23667eea'/%3E%3C/svg%3E")
+      12 12,
+    pointer;
 }
 
 /* Dark theme cursor overrides */
 .body--dark,
 .body--dark html,
 .body--dark body {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23a78bfa'/%3E%3C/svg%3E") 8 8, auto;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='4' fill='%23a78bfa'/%3E%3C/svg%3E")
+      8 8,
+    auto;
 }
 
 .body--dark a,
 .body--dark button,
 .body--dark .q-btn,
-.body--dark [role="button"],
+.body--dark [role='button'],
 .body--dark select,
 .body--dark input,
 .body--dark textarea {
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%23a78bfa' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a78bfa'/%3E%3C/svg%3E") 12 12, pointer;
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='8' fill='none' stroke='%23a78bfa' stroke-width='2'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a78bfa'/%3E%3C/svg%3E")
+      12 12,
+    pointer;
 }

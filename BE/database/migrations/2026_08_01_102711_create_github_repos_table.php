@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('github_repos', function (Blueprint $table) {
                 $table->id();
-                $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // bigint, FK to users
+                $table->unsignedBigInteger('user_id'); // bigint, FK to users
                 $table->string('full_name');
                 $table->string('html_url');
                 $table->longText('description')->nullable();

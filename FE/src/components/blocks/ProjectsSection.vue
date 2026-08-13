@@ -122,6 +122,11 @@ defineEmits(['retry'])
 .section {
   padding: 90px 24px;
 }
+@media (max-width: 768px) {
+  .section {
+    padding: 50px 16px;
+  }
+}
 .section-alt {
   background: #f8fafc;
 }
@@ -165,6 +170,19 @@ defineEmits(['retry'])
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 30px;
+}
+
+@media (max-width: 600px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .project-body {
+    padding: 20px 16px;
+  }
+  .project-actions {
+    padding: 12px 16px 20px;
+  }
 }
 
 .project-card {

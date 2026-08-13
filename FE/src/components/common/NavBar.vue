@@ -247,12 +247,30 @@ defineEmits(['toggle-dark', 'toggle-locale', 'scroll-to', 'open-mobile-menu'])
 }
 
 @media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 16px;
+  }
   .nav-links,
   .hire-btn {
     display: none;
   }
   .mobile-menu-btn {
     display: inline-flex;
+  }
+}
+
+@media (max-width: 400px) {
+  .logo-text {
+    font-size: 16px;
+  }
+  .logo-mark {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+  .lang-btn {
+    padding: 2px 6px;
+    font-size: 11px;
   }
 }
 </style>

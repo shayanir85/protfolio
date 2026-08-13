@@ -73,6 +73,11 @@ defineProps({
 .section {
   padding: 90px 24px;
 }
+@media (max-width: 768px) {
+  .section {
+    padding: 50px 16px;
+  }
+}
 .section-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -125,6 +130,12 @@ defineProps({
   width: 300px;
   height: 300px;
   margin: 0 auto;
+}
+@media (max-width: 480px) {
+  .avatar-wrapper {
+    width: 220px;
+    height: 220px;
+  }
 }
 .avatar-ring {
   position: absolute;
@@ -198,8 +209,8 @@ defineProps({
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
   margin: 28px 0;
 }
 .info-item {

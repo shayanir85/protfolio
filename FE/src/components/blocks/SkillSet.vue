@@ -13,7 +13,7 @@
           <button
             v-for="(cat, idx) in categories"
             :key="cat.name"
-            :ref="(el) => (tabRefs[idx] = el)"
+            :ref="(el) => setTabRef(el, idx)"
             class="skill-tab-btn"
             :class="{ active: activeCategory === cat.name }"
             @click="activeCategory = cat.name"
@@ -75,21 +75,26 @@ const categories = [
 
 const activeCategory = ref(categories[0].name)
 const trackRef = ref(null)
-const tabRefs = ref([])
+const tabRefs = ref({})
 const indicatorStyle = ref({})
+
+function setTabRef(el, idx) {
+  if (el) {
+    tabRefs.value[idx] = el
+  }
+}
 
 function updateIndicator() {
   nextTick(() => {
     const activeIndex = categories.findIndex((c) => c.name === activeCategory.value)
-    if (activeIndex === -1 || !trackRef.value || !tabRefs.value[activeIndex]) return
-    const track = trackRef.value.getBoundingClientRect()
-    const activeTab = tabRefs.value[activeIndex].getBoundingClientRect()
+    if (activeIndex === -1 || !tabRefs.value[activeIndex]) return
+    const activeTab = tabRefs.value[activeIndex]
 
     indicatorStyle.value = {
-      left: `${activeTab.left - track.left}px`,
-      top: `${activeTab.top - track.top}px`,
-      width: `${activeTab.width}px`,
-      height: `${activeTab.height}px`,
+      left: `${activeTab.offsetLeft}px`,
+      top: `${activeTab.offsetTop}px`,
+      width: `${activeTab.offsetWidth}px`,
+      height: `${activeTab.offsetHeight}px`,
       opacity: 1,
     }
   })
@@ -177,6 +182,11 @@ function getSkillLevel(tech) {
 .section {
   padding: 90px 24px;
 }
+@media (max-width: 768px) {
+  .section {
+    padding: 50px 16px;
+  }
+}
 .section-alt {
   background: #f8fafc;
 }
@@ -235,6 +245,35 @@ function getSkillLevel(tech) {
   max-width: 100%;
   flex-wrap: wrap;
   justify-content: center;
+}
+
+@media (max-width: 600px) {
+  .skill-tabs-track {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    border-radius: 16px;
+    padding: 4px;
+    width: 100%;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .skill-tabs-track::-webkit-scrollbar {
+    display: none;
+  }
+  .skill-tab-btn {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .skill-card {
+    padding: 16px;
+  }
 }
 
 .body--dark .skill-tabs-track {

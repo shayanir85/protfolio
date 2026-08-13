@@ -330,6 +330,7 @@ onUnmounted(() => {
   gap: 16px;
   max-width: 700px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .stat-card {
@@ -363,6 +364,57 @@ onUnmounted(() => {
   font-size: 0.875rem;
   color: #64748b;
   font-weight: 500;
+}
+
+@media (max-width: 600px) {
+  .hero-section {
+    padding: 85px 16px 50px;
+    min-height: auto;
+  }
+  .hero-title {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    margin-bottom: 12px;
+  }
+  .typewriter-container {
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    min-height: 2.2em;
+    margin-bottom: 16px;
+  }
+  .hero-description {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin-bottom: 24px;
+  }
+  .hero-actions {
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .hero-actions .q-btn {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  .stats-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .stat-card {
+    padding: 12px 6px;
+    border-radius: 12px;
+  }
+  .stat-value {
+    font-size: 1.35rem;
+  }
+  .stat-suffix {
+    font-size: 1.1rem;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+  }
+  .scroll-indicator {
+    display: none;
+  }
 }
 
 .scroll-indicator {

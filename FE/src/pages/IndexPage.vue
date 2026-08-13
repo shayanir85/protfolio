@@ -320,7 +320,7 @@ watch(isDark, (val) => {
 }
 
 .portfolio-page.lang-fa {
-  font-family: 'B Nazanin', 'Nazanin', Tahoma, Arial, sans-serif;
+  font-family: 'Estedad', 'IBMPlexSansArabic', 'Vazirmatn', Tahoma, Arial, sans-serif;
 }
 
 .body--dark .portfolio-page {

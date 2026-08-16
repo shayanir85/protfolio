@@ -4,7 +4,7 @@ namespace App\Filament\Resources\GithubRepos\Schemas;
 
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Toggle;
 
 class GithubRepoForm
@@ -20,8 +20,7 @@ class GithubRepoForm
                     ->required()
                     ->url()
                     ->maxLength(255),
-                Textarea::make('description')
-                    ->maxLength(65535)
+                MarkdownEditor::make('description')
                     ->columnSpanFull(),
                 TextInput::make('ssh_url')
                     ->required()

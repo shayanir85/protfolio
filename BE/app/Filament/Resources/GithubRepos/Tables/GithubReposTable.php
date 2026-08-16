@@ -21,15 +21,12 @@ class GithubReposTable
     {
         return $table
             ->columns([
-                // 1. CHECKBOX: Matches 'show' column in your model
+                
             ToggleColumn::make('show')
                 ->label('Show on Portfolio')
                 ->tooltip('Toggle to show or hide this repository')
                 ->afterStateUpdated(function ($record, $state) {
-                    // $state is the new boolean value (true/false)
-                    // $record is the GithubRepo model instance
-                    
-                    // Example: Show a notification
+
                     Notification::make()
                         ->title($state ? 'Repository visible' : 'Repository hidden')
                         ->body("{$record->full_name} has been " . ($state ? 'shown on' : 'hidden from') . " your portfolio.")
@@ -89,7 +86,7 @@ class GithubReposTable
             ])
             ->defaultSort('pushed_at', 'desc')
             ->headerActions([
-                                Action::make('FetchAgain')
+                Action::make('FetchAgain')
                 ->label('Fetch')
                 ->icon('heroicon-o-arrow-path')
                 ->action(function(){
@@ -97,7 +94,7 @@ class GithubReposTable
                     $user = User::findOrFail($userId);
                     $username= $user->github_username;
                     if($username){
-                        $response = Http::get("https://api.github.com/users/$username/repos");
+                        $response = Http::withoutVerifying()->get("https://api.github.com/users/$username/repos");
 
                         if ($response->successful()) {
                             $repos = $response->json();
@@ -125,12 +122,12 @@ class GithubReposTable
                             ])->toArray();
 
                             if (!empty($insertData)) {
-                                GithubRepo::insert($insertData);
+                                GithubRepo::updateOrCreate($insertData);
                             }
                         } else {
                             throw new \Exception('Failed to fetch GitHub repositories. Please check the username and try again.');
                         }
-                        return    Notification::make()
+                        return Notification::make()
                                     ->title('fetched successfully')
                                     ->body("your repos are updated")
                                     ->success()
@@ -203,8 +200,7 @@ class GithubReposTable
                     }),
             ])
             ->filters([
-                // Optional: Add a filter to quickly hide unchecked repos in the table view
-                // \Filament\Tables\Filters\TernaryFilter::make('is_visible')->label('Visibility'),
+
             ])
             ->recordActions([
 

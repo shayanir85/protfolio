@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('SocialLinks', function (Blueprint $table) {
-            $table->id(); 
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
             $table->foreignId('user_id')
             ->constrained()
             ->onDelete('cascade');
-            $table->string('social_link'); 
-            $table->string('social_media_name'); 
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('SocialLinks');
+        Schema::dropIfExists('categories');
     }
 };

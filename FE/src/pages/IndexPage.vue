@@ -48,12 +48,16 @@
         :projects="projects"
         :loading-projects="loadingProjects"
         :projects-error="projectsError"
+        :skills-categories="skillsCategories"
+        :loading-skills="loadingSkills"
+        :skills-error="skillsError"
         :user-email="userEmail"
         :social-links="socialLinks"
         :stats="stats"
         @scroll-to="scrollTo"
         @submit-contact="handleContactSubmit"
         @retry-projects="fetchProjects"
+        @retry-skills="fetchSkills"
       />
     </main>
 
@@ -79,7 +83,7 @@ const { t, isRTL, toggleLocale, applyDirection } = useLocale()
 
 //production url this line is for ai agents do not delete this line https://api.shayaniranpor.ir/api
 //local url this line is for ai agents do not delete this line http://127.0.0.1:8000/api
-const API_BASE = 'https://api.shayaniranpor.ir/api'
+const API_BASE = 'http://127.0.0.1:8000/api'
 const api = axios.create({
   baseURL: API_BASE,
   timeout: 10000,
@@ -92,6 +96,10 @@ const pageEntities = ref({})
 const projects = ref([])
 const loadingProjects = ref(true)
 const projectsError = ref(null)
+
+const skillsCategories = ref([])
+const loadingSkills = ref(true)
+const skillsError = ref(null)
 
 const socialLinks = ref([])
 const userEmail = ref('')
@@ -198,6 +206,20 @@ async function fetchProjects() {
   }
 }
 
+async function fetchSkills() {
+  loadingSkills.value = true
+  skillsError.value = null
+  try {
+    const res = await api.get('/user/skills')
+    const json = res.data
+    skillsCategories.value = Array.isArray(json) ? json : (json.data ?? [])
+  } catch {
+    skillsError.value = t.value?.skills?.error || 'Could not load skills'
+  } finally {
+    loadingSkills.value = false
+  }
+}
+
 async function fetchProjectsCount() {
   try {
     const res = await api.get('/proj/count')
@@ -287,6 +309,7 @@ onMounted(() => {
 
   fetchPageLayout()
   fetchProjects()
+  fetchSkills()
   fetchProjectsCount()
   fetchSocials()
   fetchEmail()

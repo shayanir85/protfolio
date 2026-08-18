@@ -6,6 +6,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\GithubReposController;
+use App\Http\Controllers\ExperienceController;
 use App\Http\Controllers\SocialController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,3 +17,5 @@ Route::get('/user/email', [AuthController::class, 'get_email'])->middleware('thr
 Route::post('/contact', [ContactController::class, 'store'])->middleware('throttle:3,1');
 
 Route::get('/user/skills', [CategoriesController::class, 'index'])->middleware('throttle:100,5');
+
+Route::get('/experience', [ExperienceController::class, 'index'])->middleware('throttle:100,5');

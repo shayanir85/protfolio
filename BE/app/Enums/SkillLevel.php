@@ -7,7 +7,7 @@ enum SkillLevel: string
     case familiar = 'familiar';
     case beginner = 'beginner';
     case intermediate = 'intermediate';
-    case midLevel = 'midLevel';
+    case midLevel = 'mid-level';
     case expert = 'expert';
 
     public function getLabel(): string
@@ -16,7 +16,7 @@ enum SkillLevel: string
             self::familiar => 'familiar',
             self::beginner => 'beginner',
             self::intermediate => 'intermediate',
-            self::midLevel => 'midLevel',
+            self::midLevel => 'mid-level',
             self::expert => 'expert',
         };
     }

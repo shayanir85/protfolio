@@ -2,7 +2,14 @@
   <div class="page-builder-renderer">
     <HeroSection :t="t" :stats="stats" @scroll-to="$emit('scroll-to', $event)" />
     <AboutBlurb :t="t" :data="entities?.about || {}" />
-    <SkillSet :t="t" :data="entities?.skills || {}" />
+    <SkillSet
+      :t="t"
+      :data="entities?.skills || {}"
+      :categories="skillsCategories"
+      :loading="loadingSkills"
+      :error="skillsError"
+      @retry="$emit('retry-skills')"
+    />
     <ExperienceTimeline :t="t" :data="entities?.experience || {}" />
     <ProjectsSection
       :t="t"
@@ -36,10 +43,13 @@ defineProps({
   projects: { type: Array, default: () => [] },
   loadingProjects: { type: Boolean, default: false },
   projectsError: { type: String, default: null },
+  skillsCategories: { type: Array, default: () => [] },
+  loadingSkills: { type: Boolean, default: false },
+  skillsError: { type: String, default: null },
   userEmail: { type: String, default: '' },
   socialLinks: { type: Array, default: () => [] },
   stats: { type: Array, default: () => [] },
 })
 
-defineEmits(['scroll-to', 'submit-contact', 'retry-projects'])
+defineEmits(['scroll-to', 'submit-contact', 'retry-projects', 'retry-skills'])
 </script>

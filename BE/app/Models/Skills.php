@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Enums\SkillLevel;
+use App\Models\Categories;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Categories;
 
 class Skills extends Model
 {
@@ -14,6 +15,11 @@ class Skills extends Model
         'name',
         'level',
         'category_id',
+        'iconUrl',
+    ];
+
+    protected $casts = [
+        'level' => SkillLevel::class,
     ];
 
     public function category(): BelongsTo

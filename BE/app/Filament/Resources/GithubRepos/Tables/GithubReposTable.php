@@ -23,55 +23,48 @@ class GithubReposTable
             ->columns([
                 
             ToggleColumn::make('show')
-                ->label('Show on Portfolio')
-                ->tooltip('Toggle to show or hide this repository')
+                ->label('نمایش در پورتفولیو')
+                ->tooltip('تغییر وضعیت نمایش یا عدم نمایش این مخزن')
                 ->afterStateUpdated(function ($record, $state) {
 
                     Notification::make()
-                        ->title($state ? 'Repository visible' : 'Repository hidden')
-                        ->body("{$record->full_name} has been " . ($state ? 'shown on' : 'hidden from') . " your portfolio.")
+                        ->title($state ? 'مخزن نمایان شد' : 'مخزن پنهان شد')
+                        ->body("مخزن {$record->full_name} در پورتفولیو " . ($state ? 'نمایش داده شد.' : 'پنهان شد.'))
                         ->success()
                         ->send();
-                        
-                    // Example: Clear portfolio cache so changes appear immediately
-                    // Cache::forget('portfolio_repos');
                 }),
 
-                // 2. REPOSITORY NAME: Matches 'full_name'
                 TextColumn::make('full_name')
-                    ->label('Repository')
+                    ->label('مخزن')
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                // 3. LANGUAGE: We can extract this from full_name or add a 'language' column if you prefer
-                // Since your model doesn't have a 'language' column, I'll use 'pushed_at' for sorting context
+
                 TextColumn::make('pushed_at')
-                    ->label('Last Pushed')
+                    ->label('آخرین ارسال')
                     ->dateTime('M j, Y')
                     ->sortable(),
 
-                // 4. STATS: Matches your integer columns
                 TextColumn::make('stargazers_count')
-                    ->label('Stars')
+                    ->label('ستاره‌ها')
                     ->numeric()
                     ->sortable()
                     ->icon('heroicon-s-star'),
 
                 TextColumn::make('watchers_count')
-                    ->label('Watchers')
+                    ->label('دنبال‌کنندگان')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('forks_count')
-                    ->label('Forks')
+                    ->label('فورک‌ها')
                     ->numeric()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                // 5. URL: Matches 'html_url'
                 TextColumn::make('html_url')
-                    ->label('Link')
+                    ->label('لینک')
                     ->url(fn ($record) => $record->html_url)
                     ->openUrlInNewTab()
                     ->icon('heroicon-o-arrow-top-right-on-square')
@@ -79,15 +72,15 @@ class GithubReposTable
                     ->toggleable(isToggledHiddenByDefault: true),
                 
                 TextColumn::make('ssh_url')
-                    ->label('SSH URL')
+                    ->label('آدرس SSH')
                     ->copyable()
-                    ->copyMessage('Copied!')
+                    ->copyMessage('کپی شد!')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->defaultSort('pushed_at', 'desc')
             ->headerActions([
                 Action::make('FetchAgain')
-                ->label('Fetch')
+                ->label('بروزرسانی مجدد')
                 ->icon('heroicon-o-arrow-path')
                 ->action(function(){
                     $userId = auth()->id();
@@ -99,11 +92,8 @@ class GithubReposTable
                         if ($response->successful()) {
                             $repos = $response->json();
 
-                            // 3. Cache the response
                             Cache::put("github_api_data_$username", $repos, now()->addMinutes(30));
 
-                            // 4. Save to Database
-                            // We clear existing repos for thais user to avoid duplicates, then insert the fresh list
                             GithubRepo::where('user_id', $userId)->delete();
 
                             $insertData = collect($repos)->map(fn ($repo) => [
@@ -125,31 +115,31 @@ class GithubReposTable
                                 GithubRepo::updateOrCreate($insertData);
                             }
                         } else {
-                            throw new \Exception('Failed to fetch GitHub repositories. Please check the username and try again.');
+                            throw new \Exception('دریافت مخازن گیت‌هاب با خطا مواجه شد. لطفاً نام کاربری را بررسی کرده و مجدد تلاش کنید.');
                         }
                         return Notification::make()
-                                    ->title('fetched successfully')
-                                    ->body("your repos are updated")
+                                    ->title('با موفقیت دریافت شد')
+                                    ->body("مخازن شما با موفقیت بروزرسانی شدند")
                                     ->success()
                                     ->send(); 
                     }
                 Notification::make()
-                    ->title('Sign Your Username First')
-                    ->body("You can sign your username using the 'Fetch Your GitHub Repos' button.")
+                    ->title('ابتدا نام کاربری گیت‌هاب خود را ثبت کنید')
+                    ->body("می‌توانید با دکمه 'دریافت مخازن گیت‌هاب' نام کاربری خود را ثبت کنید.")
                     ->danger()
                     ->icon('heroicon-o-arrow-path')
                     ->send();
                 }),
                 Action::make('fetchAndSyncGithubRepos')
-                    ->label('Fetch Your GitHub Repos')
+                    ->label('دریافت مخازن گیت‌هاب')
                     ->icon('heroicon-o-cloud-arrow-down')
-                    ->modalHeading('Enter GitHub Username')
-                    ->modalDescription('This will fetch public repositories, cache them, and save them to your database.')
+                    ->modalHeading('ورود نام کاربری گیت‌هاب')
+                    ->modalDescription('مخازن عمومی شما دریافت و در پایگاه داده ذخیره خواهند شد.')
                     ->modalWidth('md')
                     ->form([
                         TextInput::make('github_username')
-                            ->label('GitHub Username')
-                            ->placeholder('e.g., shayanir85')
+                            ->label('نام کاربری گیت‌هاب')
+                            ->placeholder('مثال: shayanir85')
                             ->required()
                             ->maxLength(255)
                             ->alphaDash(),
@@ -158,22 +148,17 @@ class GithubReposTable
                         $username = $data['github_username'];
                         $userId = auth()->id();
 
-                        // 1. Update the authenticated user's GitHub username
                         $user = User::findOrFail($userId);
                         $user->github_username = $username;
                         $user->save();
 
-                        // 2. Fetch data from GitHub API
                         $response = Http::withoutVerifying()->get("https://api.github.com/users/$username/repos?sort=updated&direction=desc&per_page=100");
 
                         if ($response->successful()) {
                             $repos = $response->json();
 
-                            // 3. Cache the response
                             Cache::put("github_api_data_$username", $repos, now()->addMinutes(30));
 
-                            // 4. Save to Database
-                            // We clear existing repos for this user to avoid duplicates, then insert the fresh list
                             GithubRepo::where('user_id', $userId)->delete();
 
                             $insertData = collect($repos)->map(fn ($repo) => [
@@ -195,7 +180,7 @@ class GithubReposTable
                                 GithubRepo::insert($insertData);
                             }
                         } else {
-                            throw new \Exception('Failed to fetch GitHub repositories. Please check the username and try again.');
+                            throw new \Exception('دریافت مخازن گیت‌هاب با خطا مواجه شد. لطفاً نام کاربری را بررسی کرده و مجدد تلاش کنید.');
                         }
                     }),
             ])

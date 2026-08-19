@@ -20,9 +20,15 @@ class ContactResource extends Resource
 {
     protected static ?string $model = Contact::class;
 
+    protected static ?string $modelLabel = 'پیام تماس';
+
+    protected static ?string $pluralModelLabel = 'پیام‌های تماس';
+
+    protected static ?string $navigationLabel = 'تماس‌ها';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Contact';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

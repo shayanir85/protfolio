@@ -9,20 +9,6 @@
         </div>
 
         <div class="header-actions">
-          <!-- Language Toggle -->
-          <q-btn
-            flat
-            dense
-            no-caps
-            :label="isRTL ? 'EN' : 'FA'"
-            class="lang-btn"
-            @click="toggleLocale"
-          >
-            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 10]">
-              {{ isRTL ? 'Switch to English' : 'تغییر به فارسی' }}
-            </q-tooltip>
-          </q-btn>
-
           <!-- Dark Mode Toggle -->
           <q-btn
             round

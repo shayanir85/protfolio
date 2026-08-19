@@ -16,17 +16,17 @@ class ContactsTable
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label('نام')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('phone')
-                    ->label('Phone')
+                    ->label('شماره تماس')
                     ->searchable(),
                 TextColumn::make('message')
-                    ->label('Message')
+                    ->label('پیام')
                     ->limit(50),
                 TextColumn::make('created_at')
-                    ->label('Created')
+                    ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->sortable(),
             ])

@@ -1,5 +1,5 @@
 <template>
-  <section id="contact" class="section">
+  <section v-if="hasData" id="contact" class="section">
     <div class="section-container">
       <div class="section-header">
         <span class="section-subtitle">{{ t.contact.subtitle }}</span>
@@ -102,13 +102,21 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, computed } from 'vue'
 
-defineProps({
+const props = defineProps({
   t: { type: Object, required: true },
   data: { type: Object, default: () => ({}) },
   email: { type: String, default: '' },
   socialLinks: { type: Array, default: () => [] },
+})
+
+const hasData = computed(() => {
+  const hasEmail = Boolean(props.email && props.email.trim())
+  const hasSocials = Array.isArray(props.socialLinks) && props.socialLinks.length > 0
+  const hasEntitiesContact = props.data && Object.keys(props.data).length > 0
+  const hasTContact = props.t?.contact && (props.t.contact.title || props.t.contact.heading)
+  return Boolean(hasEmail || hasSocials || hasEntitiesContact || hasTContact)
 })
 
 const emit = defineEmits(['submit-contact'])

@@ -18,9 +18,15 @@ class CategoriesResource extends Resource
 {
     protected static ?string $model = Categories::class;
 
+    protected static ?string $modelLabel = 'دسته‌بندی';
+
+    protected static ?string $pluralModelLabel = 'دسته‌بندی‌ها';
+
+    protected static ?string $navigationLabel = 'دسته‌بندی‌ها';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Categories';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

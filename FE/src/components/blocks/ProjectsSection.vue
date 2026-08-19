@@ -1,5 +1,5 @@
 <template>
-  <section id="projects" class="section section-alt">
+  <section v-if="hasData" id="projects" class="section section-alt">
     <div class="section-container">
       <div class="section-header">
         <span class="section-subtitle">{{ t.projects.subtitle }}</span>
@@ -40,15 +40,8 @@
         />
       </div>
 
-      <!-- Empty State -->
-      <div v-else-if="projects.length === 0" class="empty-state">
-        <div class="empty-icon"><q-icon name="inventory_2" size="64px" color="primary" /></div>
-        <h3 class="empty-title">{{ t.projects.noProjects }}</h3>
-        <p class="empty-text">{{ t.projects.noProjectsText }}</p>
-      </div>
-
       <!-- Projects Grid -->
-      <div v-else class="projects-grid">
+      <div v-else-if="projects.length > 0" class="projects-grid">
         <div
           v-for="(project, idx) in projects"
           :key="project.id || idx"
@@ -108,7 +101,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   t: { type: Object, required: true },
   data: { type: Object, default: () => ({}) },
   projects: { type: Array, default: () => [] },
@@ -116,6 +111,10 @@ defineProps({
   error: { type: String, default: null },
 })
 defineEmits(['retry'])
+
+const hasData = computed(() => {
+  return props.loading || Boolean(props.error) || (props.projects && props.projects.length > 0)
+})
 </script>
 
 <style scoped>

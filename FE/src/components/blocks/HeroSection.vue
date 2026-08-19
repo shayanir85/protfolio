@@ -1,5 +1,5 @@
 <template>
-  <section id="hero" class="hero-section">
+  <section v-if="hasData" id="hero" class="hero-section">
     <div class="hero-bg">
       <div class="blob blob-1"></div>
       <div class="blob blob-2"></div>
@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 
 const props = defineProps({
   t: { type: Object, required: true },
@@ -87,6 +87,10 @@ const props = defineProps({
 })
 
 defineEmits(['scroll-to'])
+
+const hasData = computed(() => {
+  return Boolean(props.t?.hero && (props.t.hero.greeting || props.t.hero.name || (props.stats && props.stats.length > 0)))
+})
 
 const displayedText = ref('')
 const currentTextIndex = ref(0)

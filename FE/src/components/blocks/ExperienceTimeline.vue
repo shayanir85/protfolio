@@ -1,5 +1,5 @@
 <template>
-  <section id="experience" class="section">
+  <section v-if="displayItems && displayItems.length > 0" id="experience" class="section">
     <div class="section-container">
       <div class="section-header">
         <span class="section-subtitle">{{ t.experience.subtitle }}</span>
@@ -9,8 +9,8 @@
 
       <div class="timeline">
         <div
-          v-for="(exp, idx) in t.experience.items"
-          :key="idx"
+          v-for="(exp, idx) in displayItems"
+          :key="exp.id || idx"
           class="timeline-item"
           :class="idx % 2 === 0 ? 'left' : 'right'"
         >
@@ -19,13 +19,14 @@
           </div>
           <div class="timeline-content">
             <div class="timeline-period">{{ exp.period }}</div>
-            <h3 class="timeline-title">{{ exp.title }}</h3>
+            <h3 class="timeline-title">{{ exp.position || exp.title }}</h3>
             <div class="timeline-company">
               <q-icon name="business" size="xs" class="q-mr-xs" />
-              {{ exp.company }}
+              {{ exp.title || exp.company }}
             </div>
-            <q-separator class="q-my-md" />
-            <ul class="timeline-duties">
+            <q-separator v-if="exp.explanation || (exp.duties && exp.duties.length)" class="q-my-md" />
+            <div v-if="exp.explanation" class="timeline-explanation q-mb-sm" style="white-space: pre-line;">{{ exp.explanation }}</div>
+            <ul v-if="exp.duties && exp.duties.length" class="timeline-duties">
               <li v-for="(duty, i) in exp.duties" :key="i" v-html="duty"></li>
             </ul>
           </div>
@@ -51,9 +52,36 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   t: { type: Object, required: true },
   data: { type: Object, default: () => ({}) },
+  experiences: { type: Array, default: () => [] },
+})
+
+const displayItems = computed(() => {
+  if (props.experiences && props.experiences.length > 0) {
+    return props.experiences.map((item) => {
+      const periodStr = item.period
+        ? item.period
+        : item.end_date
+          ? `${item.start_date} -> ${item.end_date}`
+          : `${item.start_date} -> current job`
+
+      return {
+        id: item.id,
+        title: item.title,
+        position: item.position,
+        explanation: item.explanation,
+        company: item.company || item.title,
+        period: periodStr,
+        icon: item.icon || 'work',
+        duties: item.duties || [],
+      }
+    })
+  }
+  return props.t.experience?.items || []
 })
 </script>
 

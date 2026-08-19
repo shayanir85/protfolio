@@ -18,9 +18,15 @@ class SkillsResource extends Resource
 {
     protected static ?string $model = Skills::class;
 
+    protected static ?string $modelLabel = 'مهارت';
+
+    protected static ?string $pluralModelLabel = 'مهارت‌ها';
+
+    protected static ?string $navigationLabel = 'مهارت‌ها';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'Skills';
+    protected static ?string $recordTitleAttribute = 'name';
 
     public static function form(Schema $schema): Schema
     {

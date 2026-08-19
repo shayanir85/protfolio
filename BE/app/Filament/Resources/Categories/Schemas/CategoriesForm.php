@@ -13,8 +13,10 @@ class CategoriesForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('نام دسته‌بندی')
                     ->required(),
                 Select::make('user_id')
+                    ->label('کاربر')
                     ->relationship('user', 'name')
                     ->required(),
             ]);

@@ -15,14 +15,18 @@ class CategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('نام دسته‌بندی')
                     ->searchable(),
                 TextColumn::make('user.name')
+                    ->label('کاربر')
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('تاریخ بروزرسانی')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

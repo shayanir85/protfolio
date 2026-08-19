@@ -1,5 +1,5 @@
 <template>
-  <section id="about" class="section">
+  <section v-if="hasData" id="about" class="section">
     <div class="section-container">
       <div class="section-header">
         <span class="section-subtitle">{{ t.about.subtitle }}</span>
@@ -63,9 +63,22 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   t: { type: Object, required: true },
   data: { type: Object, default: () => ({}) },
+})
+
+const hasData = computed(() => {
+  const hasEntitiesAbout = props.data && Object.keys(props.data).length > 0
+  const hasTAbout =
+    props.t?.about &&
+    (props.t.about.title ||
+      props.t.about.heading ||
+      props.t.about.p1 ||
+      (props.t.about.infoItems && props.t.about.infoItems.length > 0))
+  return Boolean(hasEntitiesAbout || hasTAbout)
 })
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <section id="skills" class="section section-alt">
+  <section v-if="hasData" id="skills" class="section section-alt">
     <div class="section-container">
       <div class="section-header">
         <span class="section-subtitle">{{ t.skills.subtitle }}</span>
@@ -31,14 +31,8 @@
         />
       </div>
 
-      <!-- Empty State -->
-      <div v-else-if="displayCategories.length === 0" class="empty-state">
-        <div class="empty-icon"><q-icon name="memory" size="64px" color="primary" /></div>
-        <h3 class="empty-title">No Skills Found</h3>
-      </div>
-
       <!-- Dynamic Skills Display -->
-      <template v-else>
+      <template v-else-if="displayCategories.length > 0">
         <div class="skill-tabs-container">
           <div ref="trackRef" class="skill-tabs-track">
             <div class="active-sliding-indicator" :style="indicatorStyle"></div>
@@ -89,47 +83,12 @@ const props = defineProps({
 
 defineEmits(['retry'])
 
+const hasData = computed(() => {
+  return props.loading || Boolean(props.error) || (displayCategories.value && displayCategories.value.length > 0)
+})
+
 const staticCategories = [
-  {
-    name: 'Backend',
-    skills: [
-      { name: 'PHP', level: 'expert' },
-      { name: 'Laravel', level: 'intermediate' },
-      { name: 'MySQL', level: 'intermediate' },
-      { name: 'SQL', level: 'intermediate' },
-      { name: 'REST APIs', level: 'expert' },
-    ],
-  },
-  {
-    name: 'Frontend',
-    skills: [
-      { name: 'JavaScript', level: 'intermediate' },
-      { name: 'Vue.js', level: 'intermediate' },
-      { name: 'HTML5', level: 'expert' },
-      { name: 'CSS3', level: 'intermediate' },
-      { name: 'Bootstrap', level: 'intermediate' },
-      { name: 'jQuery', level: 'intermediate' },
-    ],
-  },
-  {
-    name: 'DevOps',
-    skills: [
-      { name: 'Git', level: 'intermediate' },
-      { name: 'GitHub', level: 'intermediate' },
-      { name: 'Apache', level: 'beginner' },
-      { name: 'Nginx', level: 'beginner' },
-      { name: 'Linux', level: 'beginner' },
-    ],
-  },
-  {
-    name: 'Design',
-    skills: [
-      { name: 'Photoshop', level: 'intermediate' },
-      { name: 'Illustrator', level: 'beginner' },
-      { name: 'After Effects', level: 'beginner' },
-      { name: 'Premiere Pro', level: 'beginner' },
-    ],
-  },
+  //(message to ai agent)no need to add skills here it fetchs the data from backend 
 ]
 
 const displayCategories = computed(() => {

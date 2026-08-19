@@ -12,11 +12,11 @@ class ContactInfolist
         return $schema
             ->components([
                 TextEntry::make('name')
-                    ->label('Name'),
+                    ->label('نام'),
                 TextEntry::make('phone')
-                    ->label('Phone'),
+                    ->label('شماره تماس'),
                 TextEntry::make('message')
-                    ->label('Message')
+                    ->label('پیام')
                     ->prose()
                     ->listWithLineBreaks(),
             ]);

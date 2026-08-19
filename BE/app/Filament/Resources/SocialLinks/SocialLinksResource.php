@@ -21,6 +21,12 @@ class SocialLinksResource extends Resource
 {
     protected static ?string $model = SocialLinks::class; // Fixed class name
 
+    protected static ?string $modelLabel = 'شبکه اجتماعی';
+
+    protected static ?string $pluralModelLabel = 'شبکه‌های اجتماعی';
+
+    protected static ?string $navigationLabel = 'شبکه‌های اجتماعی';
+
     protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'social_link'; // Fixed: must be a real column name
@@ -30,10 +36,11 @@ class SocialLinksResource extends Resource
         return $schema
             ->components([
                 TextInput::make('social_link') // Fixed: snake_case to match DB column
-                    ->label('Social Link')
+                    ->label('لینک')
                     ->required()
                     ->maxLength(255),
                 Select::make('social_media_name') // Fixed: snake_case to match DB column
+                    ->label('پلتفرم')
                     ->options(SocialMediaName::class)
                     ->required(),
             ]);
@@ -54,11 +61,12 @@ class SocialLinksResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('social_link') // Fixed: real column name
-                    ->label('Link')
+                    ->label('لینک')
                     ->searchable(),
                 TextColumn::make('social_media_name') // Added: show platform name
-                    ->label('Platform'),
+                    ->label('پلتفرم'),
                 TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->sortable(),
             ])

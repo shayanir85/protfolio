@@ -18,9 +18,15 @@ class GithubRepoResource extends Resource
 {
     protected static ?string $model = GithubRepo::class;
 
+    protected static ?string $modelLabel = 'مخزن گیت‌هاب';
+
+    protected static ?string $pluralModelLabel = 'مخازن گیت‌هاب';
+
+    protected static ?string $navigationLabel = 'مخازن گیت‌هاب';
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static ?string $recordTitleAttribute = 'GithubRepos';
+    protected static ?string $recordTitleAttribute = 'full_name';
 
     public static function form(Schema $schema): Schema
     {

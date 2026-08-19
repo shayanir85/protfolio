@@ -2,7 +2,9 @@
 
 namespace App\Enums;
 
-enum SkillLevel: string
+use Filament\Support\Contracts\HasLabel;
+
+enum SkillLevel: string implements HasLabel
 {
     case familiar = 'familiar';
     case beginner = 'beginner';
@@ -10,14 +12,14 @@ enum SkillLevel: string
     case midLevel = 'mid-level';
     case expert = 'expert';
 
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return match ($this) {
-            self::familiar => 'familiar',
-            self::beginner => 'beginner',
-            self::intermediate => 'intermediate',
-            self::midLevel => 'mid-level',
-            self::expert => 'expert',
+            self::familiar => 'آشنا',
+            self::beginner => 'مبتدی',
+            self::intermediate => 'متوسط',
+            self::midLevel => 'نیمه‌حرفه‌ای',
+            self::expert => 'حرفه‌ای / متخصص',
         };
     }
 }

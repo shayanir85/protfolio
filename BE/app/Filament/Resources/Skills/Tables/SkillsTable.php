@@ -16,19 +16,24 @@ class SkillsTable
         return $table
             ->columns([
                 ImageColumn::make('iconUrl')
-                    ->label('Icon')
+                    ->label('آیکون')
                     ->circular()
                     ->defaultImageUrl('/storage/icons/default.webp'),
                 TextColumn::make('name')
+                    ->label('نام مهارت')
                     ->searchable(),
                 TextColumn::make('level')
+                    ->label('سطح تسلط')
                     ->badge(),
-                TextColumn::make('category'),
+                TextColumn::make('category')
+                    ->label('دسته‌بندی'),
                 TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('تاریخ بروزرسانی')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

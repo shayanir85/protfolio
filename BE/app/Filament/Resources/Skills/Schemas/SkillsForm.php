@@ -15,18 +15,21 @@ class SkillsForm
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('نام مهارت')
                     ->required(),
                 FileUpload::make('iconUrl')
-                    ->label('Skill Icon')
+                    ->label('آیکون مهارت')
                     ->disk('public')
                     ->directory('icons')
                     ->visibility('public')
                     ->image()
                     ->nullable(),
                 Select::make('level')
+                    ->label('سطح تسلط')
                     ->options(SkillLevel::class)
                     ->required(),
                 Select::make('category_id')
+                    ->label('دسته‌بندی')
                     ->relationship('category', 'name')
                     ->required(),
             ]);

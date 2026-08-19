@@ -13,16 +13,16 @@ class ContactForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label('نام')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('phone')
-                    ->label('Phone')
+                    ->label('شماره تماس')
                     ->tel()
                     ->required()
                     ->maxLength(50),
                 Textarea::make('message')
-                    ->label('Message')
+                    ->label('پیام')
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull(),

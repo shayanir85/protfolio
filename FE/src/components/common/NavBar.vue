@@ -20,20 +20,6 @@
 
       <div class="navbar-right">
         <div class="nav-actions">
-          <!-- Language toggle -->
-          <q-btn
-            flat
-            dense
-            no-caps
-            :label="isRTL ? 'EN' : 'FA'"
-            class="lang-btn"
-            @click="$emit('toggle-locale')"
-          >
-            <q-tooltip anchor="bottom middle" self="top middle" :offset="[0, 10]">
-              {{ isRTL ? 'Switch to English' : 'تغییر به فارسی' }}
-            </q-tooltip>
-          </q-btn>
-
           <!-- Dark mode toggle -->
           <q-btn
             round

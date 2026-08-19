@@ -53,6 +53,7 @@
         :skills-error="skillsError"
         :user-email="userEmail"
         :social-links="socialLinks"
+        :experiences="experiences"
         :stats="stats"
         @scroll-to="scrollTo"
         @submit-contact="handleContactSubmit"
@@ -102,6 +103,7 @@ const loadingSkills = ref(true)
 const skillsError = ref(null)
 
 const socialLinks = ref([])
+const experiences = ref([])
 const userEmail = ref('')
 
 const activeSection = ref('hero')
@@ -110,18 +112,52 @@ const isScrolled = ref(false)
 const mobileMenuOpen = ref(false)
 const isDark = ref(false)
 
-const navLinks = computed(() => [
-  { id: 'about', label: t.value.nav.about },
-  { id: 'skills', label: t.value.nav.skills },
-  { id: 'experience', label: t.value.nav.experience },
-  { id: 'projects', label: t.value.nav.projects },
-  { id: 'contact', label: t.value.nav.contact },
-])
+const navLinks = computed(() => {
+  const links = []
+
+  const hasAbout =
+    (pageEntities.value?.about && Object.keys(pageEntities.value.about).length > 0) ||
+    (t.value?.about &&
+      (t.value.about.title ||
+        t.value.about.heading ||
+        t.value.about.p1 ||
+        (t.value.about.infoItems && t.value.about.infoItems.length > 0)))
+  if (hasAbout) links.push({ id: 'about', label: t.value.nav.about })
+
+  const hasSkills =
+    loadingSkills.value ||
+    skillsError.value ||
+    (skillsCategories.value && skillsCategories.value.length > 0) ||
+    (pageEntities.value?.skills && Object.keys(pageEntities.value.skills).length > 0)
+  if (hasSkills) links.push({ id: 'skills', label: t.value.nav.skills })
+
+  const hasExperience =
+    (experiences.value && experiences.value.length > 0) ||
+    (t.value?.experience?.items && t.value.experience.items.length > 0) ||
+    (pageEntities.value?.experience && Object.keys(pageEntities.value.experience).length > 0)
+  if (hasExperience) links.push({ id: 'experience', label: t.value.nav.experience })
+
+  const hasProjects =
+    loadingProjects.value ||
+    projectsError.value ||
+    (projects.value && projects.value.length > 0) ||
+    (pageEntities.value?.projects && Object.keys(pageEntities.value.projects).length > 0)
+  if (hasProjects) links.push({ id: 'projects', label: t.value.nav.projects })
+
+  const hasContact =
+    Boolean(userEmail.value && userEmail.value.trim()) ||
+    (socialLinks.value && socialLinks.value.length > 0) ||
+    (pageEntities.value?.contact && Object.keys(pageEntities.value.contact).length > 0) ||
+    (t.value?.contact && (t.value.contact.title || t.value.contact.heading))
+  if (hasContact) links.push({ id: 'contact', label: t.value.nav.contact })
+
+  return links
+})
 
 const stats = reactive([
-  { value: 2, label: 'Years Learning', suffix: '+', animated: 0 },
-  { value: 0, label: 'Projects Built', suffix: '+', animated: 0 },
-  { value: 3, label: 'Languages', suffix: '', animated: 0 },
+  { value: 2, label: 'سال یادگیری', suffix: '+', animated: 0 },
+  { value: 0, label: 'پروژه ساخته شده', suffix: '+', animated: 0 },
+  { value: 3, label: 'زبان', suffix: '', animated: 0 },
 ])
 
 function toggleDark() {
@@ -251,6 +287,17 @@ async function fetchEmail() {
   }
 }
 
+async function fetchExperiences() {
+  try {
+    const res = await api.get('/experience')
+    const data = res.data
+    if (Array.isArray(data)) experiences.value = data
+    else if (data.data && Array.isArray(data.data)) experiences.value = data.data
+  } catch {
+    console.warn('Could not load experiences')
+  }
+}
+
 async function handleContactSubmit(payload, resetCallback) {
   const loadingNotif = $q.notify({
     type: 'info',
@@ -313,6 +360,7 @@ onMounted(() => {
   fetchProjectsCount()
   fetchSocials()
   fetchEmail()
+  fetchExperiences()
 })
 
 onUnmounted(() => {

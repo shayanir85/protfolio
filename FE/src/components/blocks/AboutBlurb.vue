@@ -2,8 +2,8 @@
   <section v-if="hasData" id="about" class="section">
     <div class="section-container">
       <div class="section-header">
-        <span class="section-subtitle">{{ t.about.subtitle }}</span>
-        <h2 class="section-title">{{ t.about.title }}</h2>
+        <span class="section-subtitle">{{ displaySubtitle }}</span>
+        <h2 class="section-title">{{ displayTitle }}</h2>
         <div class="section-divider"></div>
       </div>
 
@@ -13,11 +13,18 @@
             <div class="avatar-ring">
               <div class="avatar-inner">
                 <q-img
-                  v-if="data?.avatar_url"
-                  :src="data.avatar_url"
+                  v-if="avatarSrc"
+                  :src="avatarSrc"
                   alt="Avatar"
-                  style="width: 100%; height: 100%; border-radius: 50%"
-                />
+                  fit="cover"
+                  class="avatar-image"
+                >
+                  <template #error>
+                    <div class="full-width full-height flex flex-center">
+                      <q-icon name="person" size="100px" color="primary" />
+                    </div>
+                  </template>
+                </q-img>
                 <q-icon v-else name="person" size="120px" color="primary" />
               </div>
             </div>
@@ -28,34 +35,7 @@
         </div>
 
         <div class="about-text-col">
-          <h3 class="about-heading">{{ t.about.heading }}</h3>
-          <div class="about-paragraph" v-html="t.about.p1"></div>
-          <div class="about-paragraph" v-html="t.about.p2"></div>
-
-          <div class="info-grid">
-            <div v-for="(item, idx) in t.about.infoItems" :key="idx" class="info-item">
-              <q-icon :name="item.icon" color="primary" size="20px" />
-              <div>
-                <div class="info-label">{{ item.label }}</div>
-                <div class="info-value">{{ item.value }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="languages-section">
-            <div class="info-label q-mb-sm">{{ t.about.languagesLabel }}</div>
-            <div class="q-gutter-sm">
-              <q-chip
-                v-for="lang in t.about.languages"
-                :key="lang"
-                color="primary"
-                text-color="white"
-                :label="lang"
-                icon="translate"
-                outline
-              />
-            </div>
-          </div>
+          <div v-if="aboutData?.content" class="rich-html-content" v-html="aboutData.content"></div>
         </div>
       </div>
     </div>
@@ -67,18 +47,42 @@ import { computed } from 'vue'
 
 const props = defineProps({
   t: { type: Object, required: true },
-  data: { type: Object, default: () => ({}) },
+  aboutData: { type: Object, default: null },
 })
 
 const hasData = computed(() => {
-  const hasEntitiesAbout = props.data && Object.keys(props.data).length > 0
-  const hasTAbout =
-    props.t?.about &&
-    (props.t.about.title ||
-      props.t.about.heading ||
-      props.t.about.p1 ||
-      (props.t.about.infoItems && props.t.about.infoItems.length > 0))
-  return Boolean(hasEntitiesAbout || hasTAbout)
+  return Boolean(
+    props.aboutData &&
+      (props.aboutData.content ||
+        props.aboutData.title ||
+        props.aboutData.avatar_url),
+  )
+})
+
+const displayTitle = computed(() => {
+  return props.aboutData?.title || 'درباره من'
+})
+
+const displaySubtitle = computed(() => {
+  return props.aboutData?.subtitle || 'بیشتر بشناسید'
+})
+
+const avatarSrc = computed(() => {
+  const url = props.aboutData?.avatar_url
+  if (!url) return null
+
+  // If already an absolute URL with port or external domain
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    // If backend generated URL with 127.0.0.1 without port 8000 while local dev runs on 8000
+    if (url.startsWith('http://127.0.0.1/storage/') || url.startsWith('http://localhost/storage/')) {
+      return url.replace('http://127.0.0.1/storage/', 'http://127.0.0.1:8000/storage/').replace('http://localhost/storage/', 'http://127.0.0.1:8000/storage/')
+    }
+    return url
+  }
+
+  // If relative path like /storage/avatars/xxx.png or avatars/xxx.png
+  const cleanPath = url.startsWith('/') ? url : `/${url}`
+  return `http://127.0.0.1:8000${cleanPath}`
 })
 </script>
 
@@ -165,6 +169,13 @@ const hasData = computed(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .body--dark .avatar-inner {
   background: #0f172a;
@@ -205,57 +216,95 @@ const hasData = computed(() => {
   }
 }
 
-.about-heading {
-  font-size: 1.85rem;
-  font-weight: 800;
-  margin: 0 0 20px;
+.about-text-col {
+  display: flex;
+  flex-direction: column;
 }
-.about-paragraph {
+
+.rich-html-content :deep(h1),
+.rich-html-content :deep(h2),
+.rich-html-content :deep(h3),
+.rich-html-content :deep(h4) {
+  font-weight: 800;
+  margin-top: 20px;
+  margin-bottom: 14px;
+  line-height: 1.35;
+}
+
+.rich-html-content :deep(h1) {
+  font-size: 2rem;
+}
+.rich-html-content :deep(h2) {
+  font-size: 1.65rem;
+}
+.rich-html-content :deep(h3) {
+  font-size: 1.35rem;
+}
+
+.rich-html-content :deep(p) {
   font-size: 1.05rem;
   line-height: 1.9;
   color: #475569;
   margin-bottom: 14px;
 }
-.body--dark .about-paragraph {
+
+.body--dark .rich-html-content :deep(p) {
   color: #cbd5e1;
 }
 
-.info-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin: 28px 0;
+.rich-html-content :deep(ul),
+.rich-html-content :deep(ol) {
+  padding-right: 24px;
+  margin-bottom: 16px;
+  line-height: 1.85;
+  color: #475569;
 }
-.info-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: rgba(102, 126, 234, 0.05);
-  border-radius: 14px;
-  border: 1px solid rgba(102, 126, 234, 0.1);
-  transition: transform 0.2s ease;
+
+.body--dark .rich-html-content :deep(ul),
+.body--dark .rich-html-content :deep(ol) {
+  color: #cbd5e1;
 }
-.info-item:hover {
-  transform: translateX(4px);
+
+.rich-html-content :deep(li) {
+  margin-bottom: 6px;
 }
-.lang-fa .info-item:hover {
-  transform: translateX(-4px);
+
+.rich-html-content :deep(blockquote) {
+  margin: 16px 0;
+  padding: 12px 20px;
+  border-right: 4px solid #667eea;
+  background: rgba(102, 126, 234, 0.06);
+  border-radius: 8px;
+  font-style: italic;
 }
-.info-label {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.lang-fa .info-label {
-  text-transform: none;
-  letter-spacing: 0;
-}
-.info-value {
+
+.rich-html-content :deep(a) {
+  color: #667eea;
+  text-decoration: underline;
   font-weight: 600;
 }
-.languages-section {
-  margin-top: 20px;
+
+.rich-html-content :deep(code) {
+  background: rgba(102, 126, 234, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #667eea;
+}
+
+.rich-html-content :deep(pre) {
+  background: #1e293b;
+  color: #f8fafc;
+  padding: 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  margin-bottom: 16px;
+}
+
+.rich-html-content :deep(pre code) {
+  background: transparent;
+  padding: 0;
+  color: inherit;
 }
 </style>

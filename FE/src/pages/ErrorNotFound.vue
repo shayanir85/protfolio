@@ -109,7 +109,7 @@ import SiteFooter from '../components/common/SiteFooter.vue'
 
 const $q = useQuasar()
 const router = useRouter()
-const { t, isRTL, toggleLocale, applyDirection } = useLocale()
+const { t, isRTL, applyDirection } = useLocale()
 
 const isDark = ref(false)
 const countdown = ref(5)

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
-#[Fillable(['full_name', 'html_url', 'description', 'ssh_url', 'stargazers_count', 'watchers_count', 'forks_count', 'pushed_at', 'show'])]
+#[Fillable(['user_id', 'full_name', 'html_url', 'description', 'ssh_url', 'stargazers_count', 'watchers_count', 'forks_count', 'pushed_at', 'show'])]
 class GithubRepo extends Model
 {
     /**

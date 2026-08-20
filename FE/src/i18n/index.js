@@ -31,21 +31,6 @@ const messages = {
       { label: 'Projects Built', suffix: '+' },
       { label: 'Languages', suffix: '' },
     ],
-    about: {
-      subtitle: 'Get to know me',
-      title: 'About Me',
-      heading: 'Backend Developer & Engineering Student',
-      p1: "I'm Shayan, a passionate backend developer focused on building robust, scalable web applications. Starting from a foundation in computer networking and software at technical high school, I've dedicated myself to mastering <strong>PHP, Laravel, and MySQL</strong>.",
-      p2: 'My goal is to become a mid-level Laravel backend developer within the next two years through self-teaching, real-world projects, and continuous learning.',
-      infoItems: [
-        { icon: 'person', label: 'Name', value: 'Shayan Iranpour' },
-        { icon: 'cake', label: 'Age', value: '20 years old' },
-        { icon: 'school', label: 'Education', value: 'Engineering Student' },
-        { icon: 'location_on', label: 'Focus', value: 'Backend Development' },
-      ],
-      languagesLabel: 'Languages Spoken',
-      languages: ['Persian', 'Turkish', 'English'],
-    },
     skills: {
       subtitle: 'What I work with',
       title: 'Tech Stack',
@@ -174,21 +159,6 @@ const messages = {
       { label: 'پروژه ساخته شده', suffix: '+' },
       { label: 'زبان', suffix: '' },
     ],
-    about: {
-      subtitle: 'بیشتر بشناسید',
-      title: 'درباره من',
-      heading: 'توسعه‌دهنده بک‌اند و دانشجوی مهندسی',
-      p1: 'من شایان هستم، توسعه‌دهنده بک‌اند که روی ساخت اپلیکیشن‌های وب قوی و مقیاس‌پذیر تمرکز دارم. از پایه‌ای در شبکه‌های کامپیوتری و نرم‌افزار در هنرستان فنی شروع کردم و خودم را وقف تسلط بر <bdi class="en-inline">PHP</bdi>، <bdi class="en-inline">Laravel</bdi> و <bdi class="en-inline">MySQL</bdi> کردم.',
-      p2: 'هدفم این است که طی دو سال آینده از طریق خودآموزی، پروژه‌های واقعی و یادگیری مستمر، به توسعه‌دهنده بک‌اند لاراول سطح متوسط تبدیل شوم.',
-      infoItems: [
-        { icon: 'person', label: 'نام', value: 'شایان ایرانپور' },
-        { icon: 'cake', label: 'سن', value: '۲۰ ساله' },
-        { icon: 'school', label: 'تحصیلات', value: 'دانشجوی مهندسی' },
-        { icon: 'location_on', label: 'تخصص', value: 'توسعه بک‌اند' },
-      ],
-      languagesLabel: 'زبان‌های مسلط',
-      languages: ['فارسی', 'ترکی', 'انگلیسی'],
-    },
     skills: {
       subtitle: 'با چه چیزی کار می‌کنم',
       title: 'تکنولوژی‌ها',

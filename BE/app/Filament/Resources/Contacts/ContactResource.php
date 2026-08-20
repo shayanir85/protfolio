@@ -26,7 +26,7 @@ class ContactResource extends Resource
 
     protected static ?string $navigationLabel = 'تماس‌ها';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedEnvelope;
 
     protected static ?string $recordTitleAttribute = 'name';
 

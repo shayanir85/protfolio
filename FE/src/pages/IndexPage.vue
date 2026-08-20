@@ -44,6 +44,9 @@
     <main class="main-content">
       <PageRenderer
         :t="t"
+        :about-data="aboutData"
+        :hero-data="heroData"
+        :goals="goals"
         :entities="pageEntities"
         :projects="projects"
         :loading-projects="loadingProjects"
@@ -68,7 +71,7 @@
 
 <script setup>
 import { ref, reactive, onMounted, onUnmounted, watch, computed } from 'vue'
-import { useQuasar } from 'quasar'
+import { useQuasar, setCssVar } from 'quasar'
 import quasarLangFa from 'quasar/lang/fa-IR'
 import quasarLangEn from 'quasar/lang/en-US'
 import axios from 'axios'
@@ -93,6 +96,9 @@ const api = axios.create({
 
 const pageLayout = ref(null)
 const pageEntities = ref({})
+const aboutData = ref(null)
+const heroData = ref(null)
+const goals = ref([])
 
 const projects = ref([])
 const loadingProjects = ref(true)
@@ -115,13 +121,13 @@ const isDark = ref(false)
 const navLinks = computed(() => {
   const links = []
 
-  const hasAbout =
-    (pageEntities.value?.about && Object.keys(pageEntities.value.about).length > 0) ||
-    (t.value?.about &&
-      (t.value.about.title ||
-        t.value.about.heading ||
-        t.value.about.p1 ||
-        (t.value.about.infoItems && t.value.about.infoItems.length > 0)))
+  const hasAbout = Boolean(
+    aboutData.value &&
+      (aboutData.value.markdown ||
+        aboutData.value.content ||
+        aboutData.value.title ||
+        aboutData.value.avatar_url),
+  )
   if (hasAbout) links.push({ id: 'about', label: t.value.nav.about })
 
   const hasSkills =
@@ -298,6 +304,67 @@ async function fetchExperiences() {
   }
 }
 
+async function fetchAbout() {
+  try {
+    const res = await api.get('/about')
+    aboutData.value = res.data ?? null
+  } catch {
+    aboutData.value = null
+  }
+}
+
+async function fetchHeroData() {
+  try {
+    const res = await api.get('/hero')
+    heroData.value = res.data ?? null
+  } catch {
+    heroData.value = null
+  }
+}
+
+async function fetchGoals() {
+  try {
+    const res = await api.get('/goals')
+    const data = res.data
+    if (Array.isArray(data)) goals.value = data
+    else if (data.data && Array.isArray(data.data)) goals.value = data.data
+  } catch {
+    goals.value = []
+  }
+}
+
+async function fetchTheme() {
+  try {
+    const res = await api.get('/theme')
+    if (res.data) {
+      const theme = res.data
+      const root = document.documentElement
+      if (theme.primary_color) {
+        root.style.setProperty('--primary-color', theme.primary_color)
+        setCssVar('primary', theme.primary_color)
+      }
+      if (theme.secondary_color) {
+        root.style.setProperty('--secondary-color', theme.secondary_color)
+        setCssVar('secondary', theme.secondary_color)
+      }
+      if (theme.accent_color) {
+        root.style.setProperty('--accent-color', theme.accent_color)
+        setCssVar('accent', theme.accent_color)
+      }
+      if (theme.gradient_start) root.style.setProperty('--gradient-start', theme.gradient_start)
+      if (theme.gradient_end) root.style.setProperty('--gradient-end', theme.gradient_end)
+      if (theme.gradient_angle) root.style.setProperty('--gradient-angle', theme.gradient_angle)
+
+      const start = theme.gradient_start || theme.primary_color || '#667eea'
+      const end = theme.gradient_end || theme.secondary_color || '#764ba2'
+      const angle = theme.gradient_angle || '135deg'
+      root.style.setProperty('--gradient-primary', `linear-gradient(${angle}, ${start} 0%, ${end} 100%)`)
+    }
+  } catch {
+    console.warn('Could not load theme settings')
+  }
+}
+
 async function handleContactSubmit(payload, resetCallback) {
   const loadingNotif = $q.notify({
     type: 'info',
@@ -354,13 +421,17 @@ onMounted(() => {
   window.addEventListener('scroll', handleScroll)
   handleScroll()
 
+  fetchTheme()
   fetchPageLayout()
+  fetchHeroData()
+  fetchAbout()
   fetchProjects()
   fetchSkills()
   fetchProjectsCount()
   fetchSocials()
   fetchEmail()
   fetchExperiences()
+  fetchGoals()
 })
 
 onUnmounted(() => {

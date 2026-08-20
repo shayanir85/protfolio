@@ -24,7 +24,7 @@ class SkillsResource extends Resource
 
     protected static ?string $navigationLabel = 'مهارت‌ها';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBolt;
 
     protected static ?string $recordTitleAttribute = 'name';
 

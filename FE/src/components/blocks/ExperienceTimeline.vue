@@ -33,15 +33,15 @@
         </div>
       </div>
 
-      <div class="goals-wrapper">
+      <div v-if="goalsList && goalsList.length > 0" class="goals-wrapper">
         <div class="goals-card">
           <div class="goals-header">
             <q-icon name="flag" color="primary" size="28px" />
             <h3 class="goals-title">{{ t.experience.goalsTitle }}</h3>
           </div>
           <div class="goals-grid">
-            <div v-for="(goal, i) in t.experience.goals" :key="i" class="goal-item">
-              <q-icon :name="goal.icon" color="primary" size="24px" />
+            <div v-for="(goal, i) in goalsList" :key="goal.id || i" class="goal-item">
+              <q-icon :name="goal.icon || 'emoji_events'" color="primary" size="24px" />
               <div class="goal-text" v-html="goal.text"></div>
             </div>
           </div>
@@ -58,6 +58,14 @@ const props = defineProps({
   t: { type: Object, required: true },
   data: { type: Object, default: () => ({}) },
   experiences: { type: Array, default: () => [] },
+  goals: { type: Array, default: () => [] },
+})
+
+const goalsList = computed(() => {
+  if (Array.isArray(props.goals) && props.goals.length > 0) {
+    return props.goals
+  }
+  return []
 })
 
 const displayItems = computed(() => {

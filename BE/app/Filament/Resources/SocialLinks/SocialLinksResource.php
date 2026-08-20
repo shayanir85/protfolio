@@ -27,7 +27,7 @@ class SocialLinksResource extends Resource
 
     protected static ?string $navigationLabel = 'شبکه‌های اجتماعی';
 
-    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|\BackedEnum|null $navigationIcon = Heroicon::OutlinedShare;
 
     protected static ?string $recordTitleAttribute = 'social_link'; // Fixed: must be a real column name
 

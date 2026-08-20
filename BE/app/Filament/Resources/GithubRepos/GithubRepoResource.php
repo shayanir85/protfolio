@@ -24,7 +24,7 @@ class GithubRepoResource extends Resource
 
     protected static ?string $navigationLabel = 'مخازن گیت‌هاب';
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCodeBracketSquare;
 
     protected static ?string $recordTitleAttribute = 'full_name';
 

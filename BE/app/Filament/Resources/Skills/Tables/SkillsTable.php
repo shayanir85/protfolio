@@ -25,8 +25,10 @@ class SkillsTable
                 TextColumn::make('level')
                     ->label('سطح تسلط')
                     ->badge(),
-                TextColumn::make('category')
-                    ->label('دسته‌بندی'),
+                TextColumn::make('category.name')
+                    ->label('دسته‌بندی')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->label('تاریخ ایجاد')
                     ->dateTime()

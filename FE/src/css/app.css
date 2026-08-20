@@ -1,5 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
 
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --accent-color: #06b6d4;
+  --gradient-start: #667eea;
+  --gradient-end: #764ba2;
+  --gradient-angle: 135deg;
+  --gradient-primary: linear-gradient(var(--gradient-angle, 135deg), var(--gradient-start, #667eea) 0%, var(--gradient-end, #764ba2) 100%);
+  --primary-rgb: 102, 126, 234;
+  --secondary-rgb: 118, 75, 162;
+  --accent-rgb: 6, 182, 212;
+}
+
+.body--dark {
+  --primary-color: #818cf8;
+  --secondary-color: #a78bfa;
+  --gradient-primary: linear-gradient(var(--gradient-angle, 135deg), var(--gradient-start, #818cf8) 0%, var(--gradient-end, #a78bfa) 100%);
+}
+
 @font-face {
   font-family: 'Estedad';
   src: url('../fonts/Estedad-Bold.ttf') format('truetype');
@@ -35,11 +54,11 @@ body {
 }
 
 /* Base Persian font for paragraphs and other elements */
-body.lang-fa {
+body.lang-fa,
+[dir='rtl'] {
   font-family: 'IBMPlexSansArabic', 'Vazirmatn', Tahoma, Arial, sans-serif !important;
   direction: rtl;
   text-align: right;
-  unicode-bidi: isolate;
 }
 
 body.lang-fa p,
@@ -51,7 +70,15 @@ body.lang-fa button,
 body.lang-fa input,
 body.lang-fa textarea {
   font-family: 'IBMPlexSansArabic', 'Vazirmatn', Tahoma, Arial, sans-serif;
-  unicode-bidi: isolate;
+}
+
+/* Rich Text & Content RTL Formatting */
+.rich-html-content,
+.rich-html-content p,
+.rich-html-content li,
+.rich-html-content blockquote {
+  direction: rtl;
+  text-align: right;
 }
 
 /* Persian titles, headers, hero section, and navbar use Estedad-Bold */

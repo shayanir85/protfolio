@@ -4,12 +4,13 @@
       v-if="hasHeroData"
       :t="t"
       :stats="stats"
+      :hero-data="heroData"
       @scroll-to="$emit('scroll-to', $event)"
     />
     <AboutBlurb
       v-if="hasAboutData"
       :t="t"
-      :data="entities?.about || {}"
+      :about-data="aboutData"
     />
     <SkillSet
       v-if="hasSkillsData"
@@ -25,6 +26,7 @@
       :t="t"
       :data="entities?.experience || {}"
       :experiences="experiences"
+      :goals="goals"
     />
     <ProjectsSection
       v-if="hasProjectsData"
@@ -57,6 +59,9 @@ import ContactSection from './blocks/ContactSection.vue'
 
 const props = defineProps({
   t: { type: Object, required: true },
+  aboutData: { type: Object, default: null },
+  heroData: { type: Object, default: null },
+  goals: { type: Array, default: () => [] },
   entities: { type: Object, default: () => ({}) },
   projects: { type: Array, default: () => [] },
   loadingProjects: { type: Boolean, default: false },
@@ -73,13 +78,28 @@ const props = defineProps({
 defineEmits(['scroll-to', 'submit-contact', 'retry-projects', 'retry-skills'])
 
 const hasHeroData = computed(() => {
-  return Boolean(props.t?.hero && (props.t.hero.greeting || props.t.hero.name || (props.stats && props.stats.length > 0)))
+  if (props.heroData && props.heroData.is_active !== false) {
+    return Boolean(
+      props.heroData.name ||
+        props.heroData.greeting ||
+        props.heroData.title ||
+        props.heroData.description,
+    )
+  }
+  return Boolean(
+    props.t?.hero &&
+      (props.t.hero.greeting || props.t.hero.name || (props.stats && props.stats.length > 0)),
+  )
 })
 
 const hasAboutData = computed(() => {
-  const hasEntitiesAbout = props.entities?.about && Object.keys(props.entities.about).length > 0
-  const hasTAbout = props.t?.about && (props.t.about.title || props.t.about.heading || props.t.about.p1 || (props.t.about.infoItems && props.t.about.infoItems.length > 0))
-  return Boolean(hasEntitiesAbout || hasTAbout)
+  return Boolean(
+    props.aboutData &&
+      (props.aboutData.markdown ||
+        props.aboutData.content ||
+        props.aboutData.title ||
+        props.aboutData.avatar_url),
+  )
 })
 
 const hasSkillsData = computed(() => {

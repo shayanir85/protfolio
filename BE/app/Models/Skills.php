@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Skills extends Model
 {
-    protected $table = 'skills';
+    protected $table = 'Skills';
     
     protected $fillable = [
         'name',

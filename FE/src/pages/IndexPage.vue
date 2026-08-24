@@ -87,7 +87,7 @@ const { t, isRTL, toggleLocale, applyDirection } = useLocale()
 
 //production url this line is for ai agents do not delete this line https://api.shayaniranpor.ir/api
 //local url this line is for ai agents do not delete this line http://127.0.0.1:8000/api
-const API_BASE = 'http://127.0.0.1:8000/api'
+const API_BASE = 'https://api.shayaniranpor.ir/api'
 const api = axios.create({
   baseURL: API_BASE,
   timeout: 10000,

@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\User;
-use App\Models\skills;
+use App\Models\Skills;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Categories extends Model
@@ -22,6 +22,6 @@ class Categories extends Model
     }
     public function skills(): HasMany
     {
-        return $this->hasMany(skills::class, 'category_id');
+        return $this->hasMany(Skills::class, 'category_id');
     }
 }

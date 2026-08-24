@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
-use App\Models\skills;
+use App\Models\Skills;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
@@ -13,7 +13,7 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        return Categories::with('skills')->get();
+        return Categories::with('Skills')->get();
     }
 
     /**
